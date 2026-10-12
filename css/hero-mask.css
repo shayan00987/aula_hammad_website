@@ -1,0 +1,41 @@
+/* ==========================================================
+   Hero portrait: natural soft mask  (load AFTER style.css)
+   Problem: .hero-art>img has a solid background, a rectangular
+   box-shadow and flat bottom corners, so the photo looks like a
+   cut-out card with a hard bottom edge inside the round halo.
+   Fix: no box, no shadow; the figure dissolves softly into the halo.
+   The image file itself is NOT changed.
+   ========================================================== */
+
+/* 1) The photo: remove the box look, add a soft mask */
+.hero-art>img {
+  background: transparent;      /* was #e7e9df (the visible block) */
+  box-shadow: none;             /* was a rectangular shadow */
+  object-position: center top;  /* keep the head fully in frame */
+
+  /* soft fade at the bottom + gently feathered sides */
+  -webkit-mask-image:
+    linear-gradient(to bottom, #000 0%, #000 66%, rgba(0,0,0,.55) 84%, transparent 100%),
+    linear-gradient(to right, transparent 0%, #000 6%, #000 94%, transparent 100%);
+  mask-image:
+    linear-gradient(to bottom, #000 0%, #000 66%, rgba(0,0,0,.55) 84%, transparent 100%),
+    linear-gradient(to right, transparent 0%, #000 6%, #000 94%, transparent 100%);
+  -webkit-mask-composite: source-in;   /* Chrome / Android / Safari */
+  mask-composite: intersect;           /* standard */
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+
+  /* soft shadow that follows her shape, not a rectangle */
+  filter: drop-shadow(0 16px 22px rgba(40, 57, 43, .16));
+}
+
+/* 2) The halo: a little depth so the figure sits in it naturally */
+.halo {
+  background: radial-gradient(circle at 50% 36%, #f2f4ea 0%, #e5e9dc 58%, #dae0cf 100%);
+}
+
+/* Tune: raise 66% (e.g. 76%) for less fade, lower (e.g. 56%) for more.
+   Want the old arch-shaped top removed too? add:
+   .hero-art>img { border-radius: 0; }                              */
